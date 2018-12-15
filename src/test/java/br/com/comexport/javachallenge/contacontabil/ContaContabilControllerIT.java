@@ -1,22 +1,24 @@
 package br.com.comexport.javachallenge.contacontabil;
 
+import br.com.comexport.javachallenge.JavaChallengeApplication;
 import br.com.comexport.javachallenge.entities.ContaContabil;
 import br.com.comexport.javachallenge.exceptions.ResourceNotFoundException;
-import br.com.comexport.javachallenge.service.ContaContabilService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Random;
 
@@ -24,22 +26,26 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@AutoConfigureMockMvc
-public class ContaContabilControllerTests {
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = { JavaChallengeApplication.class })
+@WebAppConfiguration
+public class ContaContabilControllerIT {
 
     @Autowired
+    private WebApplicationContext wac;
+
     private MockMvc mockMvc;
 
-    @MockBean
-    private ContaContabilService contaContabilService;
+    @Before
+    public void setup() throws Exception {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+    }
 
     @Test
     public void criarContaContabilDeveRetornar201() throws Exception {
 
         ContaContabil request = getContaContabil();
-        Mockito.when(contaContabilService.criarContaContabil(Mockito.any())).thenReturn(request.getNumero());
+
         String URI = "/conta-contabil";
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
@@ -92,23 +98,29 @@ public class ContaContabilControllerTests {
     @Test
     public void buscarPorIdDeveRetornarContaContabil() throws Exception {
 
-        ContaContabil contaContabil = getContaContabil();
-        Mockito.when(contaContabilService.buscarPorId(contaContabil.getNumero())).thenReturn(contaContabil);
+        ContaContabil novaContaContabilReq = getContaContabil();
+        String URI = "/conta-contabil";
 
-        String URI = "/conta-contabil/"+contaContabil.getNumero();
+        RequestBuilder requestBuilder = MockMvcRequestBuilders
+                .post(URI)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(mapToJson(novaContaContabilReq))
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(requestBuilder).andExpect(status().isCreated());
+
+        URI+="/"+novaContaContabilReq.getNumero();
 
         mockMvc.perform(get(URI))
                 .andExpect(status().isOk())
-                .andExpect(content().json(mapToJson(contaContabil)));
+                .andExpect(content().json(mapToJson(novaContaContabilReq)));
     }
 
     @Test
     public void buscarPorIdInexistenteDeveRetornar404() throws Exception {
 
         ContaContabil contaContabil = getContaContabil();
-        Mockito.when(contaContabilService.buscarPorId(contaContabil.getNumero()))
-                .thenThrow(new ResourceNotFoundException("Conta nao encontrada"));
-
+        contaContabil.setNumero(0);
         String URI = "/conta-contabil/"+contaContabil.getNumero();
 
         mockMvc.perform(get(URI))
@@ -127,4 +139,5 @@ public class ContaContabilControllerTests {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.writeValueAsString(object);
     }
+
 }

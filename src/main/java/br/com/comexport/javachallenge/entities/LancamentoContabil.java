@@ -1,7 +1,6 @@
 package br.com.comexport.javachallenge.entities;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -15,7 +14,8 @@ public class LancamentoContabil {
     @GenericGenerator(name="org.hibernate.id.UUIDGenerator", strategy = "uuid")
     private String id;
 
-    @ManyToOne(optional = false)
+    @NotNull
+    @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
     private ContaContabil contaContabil;
 
     @NotNull

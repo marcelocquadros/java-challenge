@@ -1,0 +1,6 @@
+version: '3'
+services:
+  java-challenge-api:
+    image: marceloquadros/java-challenge
+    ports:
+      - 8080:8080

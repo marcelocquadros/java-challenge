@@ -65,7 +65,6 @@ public class LancamentoContabilService {
     }
 
 
-
     public LancamentoContabilDTO buscarLancamentoContabilPorId(String id) {
 
         try{
@@ -76,7 +75,7 @@ public class LancamentoContabilService {
             log.info("Buscando lancamento contábil id: ", id);
              LancamentoContabil entity = this.lancamentoContabilRepository.findById(id)
                      .orElseThrow(
-                             ()-> new ResourceAlreadyExistsException(String.format("Lançamento contábil %s não encontrado", id)));
+                             ()-> new ResourceNotFoundException(String.format("Lançamento contábil %s não encontrado", id)));
             log.info("Lançamento contábil encontrado com sucesso!");
 
             return new LancamentoContabilDTO(entity.getContaContabil().getNumero(),
