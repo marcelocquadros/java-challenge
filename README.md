@@ -44,7 +44,7 @@ curl -X POST \
 curl -X GET \
   http://localhost:8080/conta-contabil/1000
 ```
-> lancamentos-contabeis
+> /lancamentos-contabeis
 ```sh
 curl -X POST \
   http://localhost:8080/lancamentos-contabeis \
