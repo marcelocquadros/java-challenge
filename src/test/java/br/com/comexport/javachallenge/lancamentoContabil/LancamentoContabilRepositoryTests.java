@@ -8,9 +8,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.orm.jpa.JpaSystemException;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @RunWith(SpringRunner.class)
@@ -20,9 +21,13 @@ public class LancamentoContabilRepositoryTests {
     @Autowired
     private LancamentoContabilRepository lancamentoContabilRepository;
 
+    @Autowired
+    private TestEntityManager entityManager;
+
+
     @Test
     public void saveDeveRetornarLancamentoContabilCriado() {
-        LancamentoContabil lancamentoContabil = this.lancamentoContabilRepository.save(getLancamentoContabil());
+        LancamentoContabil lancamentoContabil = this.lancamentoContabilRepository.save((getLancamentoContabil()));
         Assert.assertNotNull(lancamentoContabil);
     }
 
@@ -38,16 +43,29 @@ public class LancamentoContabilRepositoryTests {
         Assert.assertNotNull(lancamentoContabilRepository.findById(id).get());
     }
 
+    @Test
+    public void findByContaContabilDeveRetornarLancamento(){
+        ContaContabil contaContabil = new ContaContabil();
+        contaContabil.setDescricao("Conta1");
+        contaContabil.setNumero(1010);
+        entityManager.persist(contaContabil);
+
+        LancamentoContabil lancamentoContabil =  getLancamentoContabil();
+        lancamentoContabil.setContaContabil(contaContabil);
+        lancamentoContabilRepository.save(lancamentoContabil);
+
+        List<LancamentoContabil> lancamentos = lancamentoContabilRepository.findByContaContabil(contaContabil);
+
+        Assert.assertEquals(
+                lancamentos.get(0).getContaContabil().getNumero(), contaContabil.getNumero());
+
+    }
+
 
     private LancamentoContabil getLancamentoContabil(){
         LancamentoContabil lancamento = new LancamentoContabil();
         lancamento.setValor(10.00);
         lancamento.setData(20181010);
-        ContaContabil contaContabil = new ContaContabil();
-        contaContabil.setDescricao("Conta teste");
-        contaContabil.setNumero(1010);
-        lancamento.setContaContabil(contaContabil);
-
         return lancamento;
     }
 }

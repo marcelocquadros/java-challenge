@@ -17,6 +17,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Optional;
 import java.util.Random;
 
+import static org.mockito.BDDMockito.given;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class ContaContabilServiceTests {
@@ -29,7 +31,7 @@ public class ContaContabilServiceTests {
 
     @Test
     public void criarContaContabilDeveRetornarNumeroDaConta(){
-        Mockito.when(repository.save(Mockito.any(ContaContabil.class))).thenReturn(getContaContabil());
+        given(repository.save(Mockito.any())).willReturn(getContaContabil());
         Integer numero = contaContabilService.criarContaContabil(getContaContabil());
         Assert.assertNotNull(numero);
     }
@@ -37,8 +39,8 @@ public class ContaContabilServiceTests {
     @Test(expected = ResourceAlreadyExistsException.class)
     public void criarContaContabilComMesmoNumeroDeveRetornarException(){
         ContaContabil conta1 =  getContaContabil();
-        Mockito.when(repository.save(Mockito.any(ContaContabil.class))).thenReturn(conta1);
-        Mockito.when(repository.findById(conta1.getNumero())).thenReturn(Optional.of(conta1));
+        given(repository.save(Mockito.any(ContaContabil.class))).willReturn(conta1);
+        given(repository.findById(conta1.getNumero())).willReturn(Optional.of(conta1));
 
         this.contaContabilService.criarContaContabil(conta1);
         ContaContabil conta2 =  getContaContabil();
@@ -50,7 +52,8 @@ public class ContaContabilServiceTests {
     @Test
     public void buscarPorIdDeveRetornarContaContabil(){
         ContaContabil contaContabil  =  getContaContabil();
-        Mockito.when(repository.findById(contaContabil.getNumero())).thenReturn(Optional.of(contaContabil));
+        given(repository.findById(contaContabil.getNumero()))
+                .willReturn(Optional.of(contaContabil));
         ContaContabil contaContabilBusca = contaContabilService.buscarPorId(contaContabil.getNumero());
 
         Assert.assertEquals(contaContabil, contaContabilBusca);
@@ -59,8 +62,8 @@ public class ContaContabilServiceTests {
 
     @Test(expected = ResourceNotFoundException.class)
     public void buscarPorIdInexistenteDeveRetornarResourceNotFoundException(){
-        Mockito.when(repository.findById(Mockito.anyInt())).thenThrow(new ResourceNotFoundException("Conta nao encontrada"));
-        ContaContabil contaContabilBusca = contaContabilService.buscarPorId(88);
+        given(repository.findById(Mockito.anyInt())).willThrow(new ResourceNotFoundException("Conta nao encontrada"));
+        contaContabilService.buscarPorId(0);
     }
 
 

@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 
 @Data
@@ -19,7 +20,7 @@ public class LancamentoContabilDTO {
     @NotNull(message = "Campo data não pode ser nulo")
     @DateIntegerValidator(pattern = "yyyyMMdd") //custom validator (the spring annotation does not support Integer representation)
     private Integer data;
-
+    //@Digits(integer = 10,fraction = 2)
     @NotNull(message = "Campo valor não pode ser nulo")
     private Double valor;
 

@@ -41,7 +41,7 @@ public class ContaContabilRepositoryTests {
 
     @Test(expected = NoSuchElementException.class)
     public void findByIdInexistenteDeveRetornarException(){
-        Assert.assertNotNull(this.contaContabilRepository.findById(0110101010).get());
+        Assert.assertNotNull(this.contaContabilRepository.findById(0).get());
     }
 
     private ContaContabil getContaContabil(){

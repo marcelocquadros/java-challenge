@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -18,11 +19,15 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.Objects;
 import java.util.Random;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -39,7 +44,9 @@ public class ContaContabilControllerTests {
     public void criarContaContabilDeveRetornar201() throws Exception {
 
         ContaContabil request = getContaContabil();
-        Mockito.when(contaContabilService.criarContaContabil(Mockito.any())).thenReturn(request.getNumero());
+        given(contaContabilService.criarContaContabil(Mockito.any(ContaContabil.class)))
+                .willReturn(request.getNumero());
+
         String URI = "/conta-contabil";
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
@@ -49,7 +56,8 @@ public class ContaContabilControllerTests {
                 .contentType(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(requestBuilder)
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id", is(request.getNumero())));
     }
 
     @Test
@@ -93,7 +101,7 @@ public class ContaContabilControllerTests {
     public void buscarPorIdDeveRetornarContaContabil() throws Exception {
 
         ContaContabil contaContabil = getContaContabil();
-        Mockito.when(contaContabilService.buscarPorId(contaContabil.getNumero())).thenReturn(contaContabil);
+        given(contaContabilService.buscarPorId(contaContabil.getNumero())).willReturn(contaContabil);
 
         String URI = "/conta-contabil/"+contaContabil.getNumero();
 
@@ -106,8 +114,8 @@ public class ContaContabilControllerTests {
     public void buscarPorIdInexistenteDeveRetornar404() throws Exception {
 
         ContaContabil contaContabil = getContaContabil();
-        Mockito.when(contaContabilService.buscarPorId(contaContabil.getNumero()))
-                .thenThrow(new ResourceNotFoundException("Conta nao encontrada"));
+        given(contaContabilService.buscarPorId(contaContabil.getNumero()))
+                .willThrow(new ResourceNotFoundException("Conta nao encontrada"));
 
         String URI = "/conta-contabil/"+contaContabil.getNumero();
 

@@ -131,11 +131,10 @@ public class LancamentoContabilService {
                     .stream()
                     .mapToDouble(l -> l.getValor())
                     .summaryStatistics();
-
-            if(sts.getCount() == 0){
-                log.warn("Nenhum lançamento encontrado");
-                throw new ResourceNotFoundException("Não há lançamentos");
-            }
+           if(sts.getCount() == 0){
+               log.warn("Não foram encontrados lançamentos");
+               return new LancamentosSummaryDTO();
+           }
             log.info("Estaticas para {} lançamentos", sts.getCount());
             log.debug("Estatisticas: {}", sts);
             return new LancamentosSummaryDTO(

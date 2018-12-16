@@ -2,13 +2,11 @@ package br.com.comexport.javachallenge.contacontabil;
 
 import br.com.comexport.javachallenge.JavaChallengeApplication;
 import br.com.comexport.javachallenge.entities.ContaContabil;
-import br.com.comexport.javachallenge.exceptions.ResourceNotFoundException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
@@ -22,9 +20,9 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Random;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = { JavaChallengeApplication.class })
@@ -55,7 +53,8 @@ public class ContaContabilControllerIT {
                 .contentType(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(requestBuilder)
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id", is(request.getNumero())));
     }
 
     @Test

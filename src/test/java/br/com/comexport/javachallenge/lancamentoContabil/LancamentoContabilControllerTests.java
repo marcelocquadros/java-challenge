@@ -24,9 +24,10 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.UUID;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -50,16 +51,19 @@ public class LancamentoContabilControllerTests {
 
         String URI = "/lancamentos-contabeis";
 
-        Mockito.when(lancamentoContabilService.criarLancamentoContabil(Mockito.any(LancamentoContabilDTO.class)))
-                .thenReturn(UUID.randomUUID().toString());
+        String idLancamento = UUID.randomUUID().toString();
+        given(lancamentoContabilService.criarLancamentoContabil(Mockito.any(LancamentoContabilDTO.class)))
+                .willReturn(idLancamento);
+
         RequestBuilder requestBuilder = MockMvcRequestBuilders
                 .post(URI)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(mapToJson(request))
                 .contentType(MediaType.APPLICATION_JSON);
 
-        mockMvc.perform(requestBuilder)
-                .andExpect(status().isCreated());
+         mockMvc.perform(requestBuilder)
+                 .andExpect(status().isCreated())
+                 .andExpect(jsonPath("$.id", is(idLancamento)));
     }
 
     @Test
@@ -200,36 +204,9 @@ public class LancamentoContabilControllerTests {
 
     }
 
-/*    @Test
-    public void atualizarLancamentoContabilDeveRetornar204() throws Exception {
-
-        LancamentoContabilDTO request = getLancamentoContabilDTO();
-        request.setContaContabil(null);
-
-        String URI = "/lancamentos-contabeis";
-        Mockito.doNothing().when(this.lancamentoContabilService.atualizarLancamento(null,null))
-
-        RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .post(URI)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(mapToJson(request))
-                .contentType(MediaType.APPLICATION_JSON);
-
-        mockMvc.perform(requestBuilder)
-                .andExpect(status().isBadRequest());
-
-    }
-*/
-
     public LancamentosSummaryDTO getLancamentosSummaryDTO(){
         return new LancamentosSummaryDTO(1050.0,4.0,400.0,5.0,5L);
     }
-
-
-
-
-
-
 
 
     private String mapToJson(Object object) throws JsonProcessingException {
