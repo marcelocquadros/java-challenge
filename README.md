@@ -31,6 +31,7 @@ docker run -p 8080:8080 marceloquadros/java-challenge
 
 # Testing the endpoints
 > /conta-contabil
+- Request
 ```sh 
 curl -X POST \
   http://localhost:8080/conta-contabil \
@@ -38,36 +39,64 @@ curl -X POST \
   -d '{
 	"numero": 1010,
 	 "descricao": "teste3"
-}
+}'
 ```
+- Response
+```sh
+{"id":1010}
+```
+- Request
 ```sh
 curl -X GET \
-  http://localhost:8080/conta-contabil/1000
+  http://localhost:8080/conta-contabil/1010
+```
+- Response
+```sh
+{"numero":1010,"descricao":"teste3"}
 ```
 > /lancamentos-contabeis
+- Request
 ```sh
 curl -X POST \
   http://localhost:8080/lancamentos-contabeis \
   -H 'Content-Type: application/json' \
-
   -d '{
 	"contaContabil": 1010,
 	"data": 20171010,
-	"valor": 50.38909090
+	"valor": 1050.20
   }'  
 
 ```
-- Note: Replace the value below (377ffc78-a85f-4705-8480-92c04136fa73) by the id in previous response
+- Response
+```sh
+{"id":"2c91808267b9120a0167b917f5780002"}
+```
+- Request
 ```sh
 curl -X GET \
-  http://localhost:8080/lancamentos-contabeis/377ffc78-a85f-4705-8480-92c04136fa73
-    
+  http://localhost:8080/lancamentos-contabeis/2c91808267b9120a0167b917f5780002
 ```
+- Response
+```sh
+{"contaContabil":1010,"data":20171010,"valor":1050.2}
+```
+- Request
 ```sh
 curl -X GET \
   http://localhost:8080/lancamentos-contabeis 
 ```
+- Response
+```sh
+[{"contaContabil":1010,"data":20171010,"valor":1050.2}]
+```
+- Request 
 ```sh
 curl -X GET \
   http://localhost:8080/lancamentos-contabeis/_stats/?contaContabil=1010
 ```
+- Response
+```sh
+{"soma":1050.2,"min":1050.2,"max":1050.2,"media":1050.2,"qtde":1}
+```
+
+
