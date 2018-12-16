@@ -45,7 +45,7 @@ curl -X GET \
   http://localhost:8080/conta-contabil/1000
 ```
 > lancamentos-contabeis
-````sh
+```sh
 curl -X POST \
   http://localhost:8080/lancamentos-contabeis \
   -H 'Content-Type: application/json' \
@@ -54,10 +54,10 @@ curl -X POST \
 	"contaContabil": 1010,
 	"data": 20171010,
 	"valor": 50.38909090
-}
+  }'  
 
 ```
-Note: Replace the value below (377ffc78-a85f-4705-8480-92c04136fa73) by the id in previous response
+- Note: Replace the value below (377ffc78-a85f-4705-8480-92c04136fa73) by the id in previous response
 ```sh
 curl -X GET \
   http://localhost:8080/lancamentos-contabeis/377ffc78-a85f-4705-8480-92c04136fa73
@@ -67,7 +67,7 @@ curl -X GET \
 curl -X GET \
   http://localhost:8080/lancamentos-contabeis 
 ```
-````sh
+```sh
 curl -X GET \
-  'http://localhost:8080/lancamentos-contabeis/_stats/?contaContabil=1010
+  http://localhost:8080/lancamentos-contabeis/_stats/?contaContabil=1010
 ```
