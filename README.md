@@ -99,4 +99,20 @@ curl -X GET \
 {"soma":1050.2,"min":1050.2,"max":1050.2,"media":1050.2,"qtde":1}
 ```
 
+### Update 
+> The update method is prepared to support concurrency. It is controlled by optmistic locking using the JPA @Version  annotation.  The current version is always returned in Etag response header in the 'Get by Id' endpoints. The Etag value should be cached by the client and sent the value in If-Match request header in the PUT request.
+- References:
+Optimistic Locking: https://www.novatec-gmbh.de/en/managing-concurrency-in-a-distributed-restful-environment-with-spring-boot-and-angular2/
+ETags: https://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.19
 
+```sh
+curl -X PUT \
+  http://localhost:8080/lancamentos-contabeis/2c91808267b91ac40167b91b96470000 \
+  -H 'Content-Type: application/json' \
+  -H 'If-Match: "0"' \
+  -d '{
+        "contaContabil": 1010,
+        "data": 20171010,
+        "valor": 105.10
+  }'
+ ```
