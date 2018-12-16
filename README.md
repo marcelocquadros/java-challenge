@@ -22,7 +22,8 @@ mvn dockerfile:build
 ```sh
 docker run -p 8080:8080 marceloquadros/java-challenge
 ```
-- Running 2 instances of the service
+- Running 2 instances of the service without a load balancer
 ```sh
-docker-compose up --scale java-challenge-api=2
+ docker run -p 8080:8080 marceloquadros/java-challenge
+ docker run -p 8081:8080 marceloquadros/java-challenge
 ```
