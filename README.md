@@ -33,7 +33,7 @@ docker run -p 8080:8080 marceloquadros/java-challenge
 > /conta-contabil
 - Request
 ```sh 
-curl -X POST \
+curl -i -X POST \
   http://localhost:8080/conta-contabil \
   -H 'Content-Type: application/json' \
   -d '{
@@ -47,7 +47,7 @@ curl -X POST \
 ```
 - Request
 ```sh
-curl -X GET \
+curl -i -X GET \
   http://localhost:8080/conta-contabil/1010
 ```
 - Response
@@ -57,7 +57,7 @@ curl -X GET \
 > /lancamentos-contabeis
 - Request
 ```sh
-curl -X POST \
+curl -i -X POST \
   http://localhost:8080/lancamentos-contabeis \
   -H 'Content-Type: application/json' \
   -d '{
@@ -73,7 +73,7 @@ curl -X POST \
 ```
 - Request
 ```sh
-curl -X GET \
+curl -i -X GET \
   http://localhost:8080/lancamentos-contabeis/2c91808267b9120a0167b917f5780002
 ```
 - Response
@@ -82,7 +82,7 @@ curl -X GET \
 ```
 - Request
 ```sh
-curl -X GET \
+curl -i -X GET \
   http://localhost:8080/lancamentos-contabeis 
 ```
 - Response
@@ -91,7 +91,7 @@ curl -X GET \
 ```
 - Request 
 ```sh
-curl -X GET \
+curl -i -X GET \
   http://localhost:8080/lancamentos-contabeis/_stats
 ```
 - Response
@@ -100,7 +100,7 @@ curl -X GET \
 ```
 - Request 
 ```sh
-curl -X GET \
+curl -i -X GET \
   http://localhost:8080/lancamentos-contabeis/_stats/?contaContabil=1010
 ```
 - Response
@@ -115,7 +115,7 @@ Optimistic Locking: https://www.novatec-gmbh.de/en/managing-concurrency-in-a-dis
 ETags: https://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.19
 
 ```sh
-curl -X PUT \
+curl -i -X PUT \
   http://localhost:8080/lancamentos-contabeis/2c91808267b91ac40167b91b96470000 \
   -H 'Content-Type: application/json' \
   -H 'If-Match: "0"' \
