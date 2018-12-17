@@ -92,6 +92,15 @@ curl -X GET \
 - Request 
 ```sh
 curl -X GET \
+  http://localhost:8080/lancamentos-contabeis/_stats
+```
+- Response
+```sh
+{"soma":1050.2,"min":1050.2,"max":1050.2,"media":1050.2,"qtde":1}
+```
+- Request 
+```sh
+curl -X GET \
   http://localhost:8080/lancamentos-contabeis/_stats/?contaContabil=1010
 ```
 - Response
